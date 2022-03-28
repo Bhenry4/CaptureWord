@@ -6,7 +6,6 @@
 #define nextButton 3
 
 LC lcd(0); // Creates an object named "lcd" of the "Adafruit_LiquidCrytal" class
-char word[];
 
 void setup()
 {                                                                          // put your setup code here, to run once:
@@ -29,7 +28,7 @@ char *getWord()
     int address = rand() % 10 /*placeholder until I get word list*/;
     int index = EEPROM.read(address);
     int nextIndex = EEPROM.read(address + 1);
-    word[nextIndex - index];
+    char word[nextIndex - index];
 
     for (int i = index; i < nextIndex - index; i++)
     {
