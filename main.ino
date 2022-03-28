@@ -1,4 +1,4 @@
-#include <Adafruit_LiquidCrystal.h> //I2C library
+#include <LiquidCrystal_I2C.h> //I2C library
 #define LC Adafruit_LiquidCrystal
 #include <EEPROM.h> //Memory library
 
