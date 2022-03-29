@@ -1,18 +1,16 @@
 #include <LiquidCrystal_I2C.h> //I2C library
-#define LC Adafruit_LiquidCrystal
+#define LCD LiquidCrystal_I2C
 #include <EEPROM.h> //Memory library
 
 #define timerButton 2
 #define nextButton 3
 
-LC lcd(0); // Creates an object named "lcd" of the "Adafruit_LiquidCrytal" class
+LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "Adafruit_LiquidCrytal" class (address, rows, columns)
 
 void setup()
 {                                                                          // put your setup code here, to run once:
     attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING); // ISR = Interrupt Service Routine
     attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
-
-    lcd.begin(16, 2); // 16x2 lcd screen
 }
 
 void loop()
@@ -23,16 +21,22 @@ void timerISR() {} // TODO: Add button handlers
 
 void nextISR() {}
 
-char *getWord()
-{
-    int address = rand() % 10 /*placeholder until I get word list*/;
-    int index = EEPROM.read(address);
-    int nextIndex = EEPROM.read(address + 1);
-    char word[nextIndex - index];
+int getWordLength() {
+    int location = EEPROM.read(0);
+    int index = EEPROM.read(location);
+    int nextIndex = EEPROM.read(location + 1);
+    return nextIndex - index;
+}
 
-    for (int i = index; i < nextIndex - index; i++)
+char *getWord(char word[])
+{
+    int location = EEPROM.read(0);
+    int index = EEPROM.read(location);
+
+    for (int i = index; i < word.length(); i++)
     {
         word[i] = EEPROM.read(i);
     }
+    EEPROM.update(location, index + 1);
     return word;
 }
