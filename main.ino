@@ -21,7 +21,8 @@ void timerISR() {} // TODO: Add button handlers
 
 void nextISR() {}
 
-int getWordLength() {
+int getWordLength()
+{
     int location = EEPROM.read(0);
     int index = EEPROM.read(location);
     int nextIndex = EEPROM.read(location + 1);
@@ -32,8 +33,10 @@ char *getWord(char word[])
 {
     int location = EEPROM.read(0);
     int index = EEPROM.read(location);
+    int nextIndex = EEPROM.read(location + 1);
+    int size = nextIndex - index;
 
-    for (int i = index; i < sizeof(word); i++)
+    for (int i = index; i < size; i++)
     {
         word[i] = EEPROM.read(i);
     }
