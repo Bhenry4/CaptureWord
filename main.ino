@@ -33,7 +33,7 @@ char *getWord(char word[])
     int location = EEPROM.read(0);
     int index = EEPROM.read(location);
 
-    for (int i = index; i < word.length(); i++)
+    for (int i = index; i < sizeof(word); i++)
     {
         word[i] = EEPROM.read(i);
     }
