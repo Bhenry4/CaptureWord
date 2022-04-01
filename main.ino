@@ -1,3 +1,6 @@
+/*The main file for CaptureWord
+Gets words from EEPROM and runs the game loop*/
+
 #include <LiquidCrystal_I2C.h> //I2C library
 #define LCD LiquidCrystal_I2C
 #include <EEPROM.h> //Memory library
@@ -11,7 +14,7 @@ void nextISR() {}
 
 int getWordLength()
 {
-    int location = EEPROM.read(0);
+    int location = EEPROM.read(0); // First value in EEPROM is the location of the index of the current word
     int index = EEPROM.read(location);
     int nextIndex = EEPROM.read(location + 1);
     return nextIndex - index;
@@ -28,11 +31,11 @@ char *getWord(char word[])
     {
         word[i] = EEPROM.read(i);
     }
-    EEPROM.update(location, index + 1);
+    EEPROM.update(location, location + 1); // "Update" writes only if there is a difference
     return word;
 }
 
-LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "Liquid" class (address, columns, rows)
+LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "LiquidCrystal_I2C" class (I2C address, columns, rows)
 
 void setup()
 { // put your setup code here, to run once:
@@ -49,5 +52,7 @@ void setup()
 
 void loop()
 { // put your main code here, to run repeatedly:
-    while (!digitalRead(timerButton)) {}
+    while (!digitalRead(timerButton))
+    {
+    }
 }
