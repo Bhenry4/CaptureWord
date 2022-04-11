@@ -54,4 +54,6 @@ void loop()
     while (!digitalRead(timerButton))
     {
     }
+    attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
+    attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
 }
