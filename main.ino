@@ -20,7 +20,7 @@ int getWordLength()
     return nextIndex - index;
 }
 
-char *getWord(char word[])
+getWord(char word[])
 {
     int location = EEPROM.read(0);
     int index = EEPROM.read(location);
@@ -32,7 +32,6 @@ char *getWord(char word[])
         word[i] = EEPROM.read(i);
     }
     EEPROM.update(location, location + 1); // "Update" writes only if there is a difference
-    return word;
 }
 
 LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "LiquidCrystal_I2C" class (I2C address, columns, rows)
