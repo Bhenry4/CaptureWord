@@ -20,7 +20,7 @@ int getWordLength()
     return nextIndex - index;
 }
 
-getWord(char word[])
+void getWord(char word[])
 {
     int location = EEPROM.read(0);
     int index = EEPROM.read(location);
