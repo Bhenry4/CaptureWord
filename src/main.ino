@@ -7,6 +7,7 @@ Gets words from EEPROM and runs the game loop*/
 
 #define timerButton 2
 #define nextButton 3
+LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "LiquidCrystal_I2C" class (I2C address, columns, rows)
 
 void timerISR() {} // TODO: Add button handlers
 
@@ -34,7 +35,10 @@ void getWord(char word[])
     EEPROM.update(location, location + 1); // "Update" writes only if there is a difference
 }
 
-LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "LiquidCrystal_I2C" class (I2C address, columns, rows)
+void timerLoop() {
+    attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
+    attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
+}
 
 void setup()
 { // put your setup code here, to run once:
@@ -54,6 +58,5 @@ void loop()
     while (!digitalRead(timerButton))
     {
     }
-    attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
-    attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
+    timerLoop();
 }
