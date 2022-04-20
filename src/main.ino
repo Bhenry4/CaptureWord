@@ -35,9 +35,25 @@ void getWord(char word[])
     EEPROM.update(location, location + 1); // "Update" writes only if there is a difference
 }
 
+void printCenteredWord(char word[], int wordLength) {
+    int pad = 16/wordLength; //Fix This
+    char paddedWord[pad+wordLength];
+    for (int i = 0; i <= pad; ++i){
+        paddedWord[i] = ' ';
+    }
+    for (int i = 0; i <= wordLength; i++){
+        paddedWord[i+pad] = word[i];
+    }
+    lcd.print(paddedWord);
+}
+
 void timerLoop() {
     attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
     attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
+
+    char word[getWordLength()];
+    getWord(word);
+    printCenteredWord(word, sizeof(word)-1);
 }
 
 void setup()
@@ -46,7 +62,6 @@ void setup()
     pinMode(nextButton, INPUT);
 
     lcd.init();
-    lcd.backlight();     // Turns backlight on
     lcd.setCursor(2, 0); // Moves print location to column, row (starting from 0)
     lcd.print("CaptureWord");
     lcd.setCursor(2, 1);
