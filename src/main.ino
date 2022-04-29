@@ -13,47 +13,43 @@ void timerISR() {} // TODO: Add button handlers
 
 void nextISR() {}
 
-int getWordLength()
-{
-    int location = EEPROM.read(0); // First value in EEPROM is the location of the index of the current word
-    int index = EEPROM.read(location);
-    int nextIndex = EEPROM.read(location + 1);
-    return nextIndex - index;
-}
-
-void getWord(char word[])
+String getWord()
 {
     int location = EEPROM.read(0);
     int index = EEPROM.read(location);
     int nextIndex = EEPROM.read(location + 1);
     int length = nextIndex - index;
+    String word = String();
 
     for (int i = index; i < length; i++)
     {
-        word[i] = EEPROM.read(i);
+        word = word + EEPROM.read(i);
     }
     EEPROM.update(location, location + 1); // "Update" writes only if there is a difference
+    return word;
 }
 
-void printCenteredWord(char word[], int wordLength) {
-    int pad = 16/wordLength; //Fix This
-    char paddedWord[pad+wordLength];
-    for (int i = 0; i <= pad; ++i){
-        paddedWord[i] = ' ';
+void printCenteredWord(String word)
+{
+    int pad = (16 - word.length()) / 2;
+    String paddedWord = word;
+
+    for (int i = 0; i <= pad; i++)
+    {
+        paddedWord = " " + paddedWord;
     }
-    for (int i = 0; i <= wordLength; i++){
-        paddedWord[i+pad] = word[i];
-    }
+
+    lcd.setCursor(0, 0);
     lcd.print(paddedWord);
 }
 
-void timerLoop() {
+void timerLoop()
+{
     attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
     attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
 
-    char word[getWordLength()];
-    getWord(word);
-    printCenteredWord(word, sizeof(word)-1);
+    String word = getWord();
+    printCenteredWord(word);
 }
 
 void setup()
