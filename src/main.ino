@@ -9,7 +9,9 @@ Gets words from EEPROM and runs the game loop*/
 #define nextButton 3
 LCD lcd(0x27, 16, 2); // Creates an object named "lcd" of the "LiquidCrystal_I2C" class (I2C address, columns, rows)
 
-void timerISR() {} // TODO: Add button handlers
+void timerISR()
+{
+} // TODO: Add button handlers
 
 void nextISR() {}
 
@@ -18,14 +20,14 @@ String getWord()
     int indexLocation = EEPROM.read(0);
     int index = EEPROM.read(indexLocation);
     int nextIndex = EEPROM.read(indexLocation + 1);
-    int length = nextIndex - index;
     String word;
 
-    for (int i = index; i < length; ++i)
+    for (int i = index; i < nextIndex; ++i)
     {
-        word += EEPROM.read(i);
+        word = word + EEPROM.read(i);
     }
-    EEPROM.update(0, indexLocation + 1); // "Update" writes only if there is a difference
+    word = word + "\0";
+    EEPROM.update(0, 1); // "Update" writes only if there is a difference; Until I get more words
 }
 
 String leftPad(String word)
@@ -44,9 +46,10 @@ String leftPad(String word)
 void setup()
 { // put your setup code here, to run once:
     pinMode(timerButton, INPUT);
-    //pinMode(nextButton, INPUT);
+    // pinMode(nextButton, INPUT);
 
     lcd.init();
+    lcd.backlight();
     lcd.setCursor(2, 0); // Moves print location to column, row (starting from 0)
     lcd.print("CaptureWord");
     lcd.setCursor(2, 1);
@@ -60,7 +63,7 @@ void setup()
 void loop()
 { // put your main code here, to run repeatedly:
     attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
-    //attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
+    // attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
 
     String word = getWord();
     word = leftPad(word);
