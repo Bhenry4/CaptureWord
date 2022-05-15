@@ -15,59 +15,59 @@ void nextISR() {}
 
 String getWord()
 {
-    int location = EEPROM.read(0);
-    int index = EEPROM.read(location);
-    int nextIndex = EEPROM.read(location + 1);
+    int indexLocation = EEPROM.read(0);
+    int index = EEPROM.read(indexLocation);
+    int nextIndex = EEPROM.read(indexLocation + 1);
     int length = nextIndex - index;
-    String word = String();
+    String word;
 
-    for (int i = index; i < length; i++)
+    for (int i = index; i < length; ++i)
     {
-        word = word + EEPROM.read(i);
+        word += EEPROM.read(i);
     }
-    EEPROM.update(location, location + 1); // "Update" writes only if there is a difference
-    return word;
+    EEPROM.update(0, indexLocation + 1); // "Update" writes only if there is a difference
 }
 
-void printCenteredWord(String word)
+String leftPad(String word)
 {
-    int pad = (16 - word.length()) / 2;
-    String paddedWord = word;
-
-    for (int i = 0; i <= pad; i++)
+    int wordLength = sizeof(word) - 1;
+    int pad = (16 - wordLength) / 2;
+    String paddedWord;
+    for (int i = 0; i <= pad; ++i)
     {
-        paddedWord = " " + paddedWord;
+        paddedWord += ' ';
     }
-
-    lcd.setCursor(0, 0);
-    lcd.print(paddedWord);
-}
-
-void timerLoop()
-{
-    attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
-    attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
-
-    String word = getWord();
-    printCenteredWord(word);
+    paddedWord += word;
+    return paddedWord;
 }
 
 void setup()
 { // put your setup code here, to run once:
     pinMode(timerButton, INPUT);
-    pinMode(nextButton, INPUT);
+    //pinMode(nextButton, INPUT);
 
     lcd.init();
     lcd.setCursor(2, 0); // Moves print location to column, row (starting from 0)
     lcd.print("CaptureWord");
     lcd.setCursor(2, 1);
     lcd.print("Press timer");
+
+    while (!digitalRead(timerButton))
+    {
+    }
 }
 
 void loop()
 { // put your main code here, to run repeatedly:
-    while (!digitalRead(timerButton))
+    attachInterrupt(digitalPinToInterrupt(timerButton), timerISR, RISING);
+    //attachInterrupt(digitalPinToInterrupt(nextButton), nextISR, RISING);
+
+    String word = getWord();
+    word = leftPad(word);
+    lcd.clear();
+    lcd.home();
+    lcd.print(word);
+    while (true)
     {
     }
-    timerLoop();
 }
