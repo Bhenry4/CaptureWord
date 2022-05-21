@@ -24,9 +24,8 @@ String getWord()
 
     for (int i = index; i < nextIndex; ++i)
     {
-        word = word + EEPROM.read(i);
+        word = word.concat(EEPROM.read(i));
     }
-    word = word + "\0";
     EEPROM.update(0, 1); // "Update" writes only if there is a difference; Until I get more words
 }
 
@@ -37,9 +36,9 @@ String leftPad(String word)
     String paddedWord;
     for (int i = 0; i <= pad; ++i)
     {
-        paddedWord += ' ';
+        paddedWord = paddedWord.concat(' ');
     }
-    paddedWord += word;
+    paddedWord = paddedWord.concat(word);
     return paddedWord;
 }
 
